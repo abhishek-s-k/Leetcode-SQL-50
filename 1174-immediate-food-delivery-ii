@@ -1,0 +1,14 @@
+WITH cte AS(
+    SELECT
+        *,
+        RANK() OVER(PARTITION BY customer_id ORDER BY order_date) AS orders_no_by_date
+    FROM
+        Delivery
+)
+
+SELECT
+    ROUND(AVG(order_date = customer_pref_delivery_date) * 100, 2) AS immediate_percentage 
+FROM
+    cte
+WHERE
+    orders_no_by_date = 1

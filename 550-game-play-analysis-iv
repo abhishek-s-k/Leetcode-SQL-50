@@ -1,0 +1,17 @@
+WITH cte AS(
+    SELECT
+        *,
+        RANK() OVER(PARTITION BY player_id ORDER BY event_date) AS login_no,
+        DATEDIFF(
+            event_date,
+            LAG(event_date) OVER (PARTITION BY player_id ORDER BY event_date)
+        ) AS event_diff
+    FROM
+        Activity
+)
+
+SELECT 
+    ROUND(COUNT(*) / (SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction
+FROM 
+    cte
+WHERE login_no = 2 AND event_diff = 1

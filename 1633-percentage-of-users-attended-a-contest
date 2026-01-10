@@ -1,0 +1,10 @@
+SELECT
+    contest_id,
+    COALESCE(ROUND(COUNT(*) * 100 / (SELECT COUNT(distinct user_id) FROM Users) ,2),0.00) AS percentage
+FROM
+    Register R
+GROUP BY
+    contest_id
+ORDER BY
+    percentage DESC,
+    contest_id
